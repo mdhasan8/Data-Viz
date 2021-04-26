@@ -1,0 +1,386 @@
+---
+title: "data_viz"
+author: "Md Easin Hasan"
+date: "4/20/2021"
+output: word_document
+---
+
+# Visualizing Amounts:
+# Import the dataset:
+```{r}
+data<-read.csv(file="owid-covid-data425.csv",header=TRUE)
+dim(data)
+```
+
+We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. They have up-to-date data on confirmed cases, deaths, hospitalizations, testing, and vaccinations, throughout the duration of the COVID-19 pandemic.
+
+
+```{r}
+data2 <- data[data$iso_code == "USA", ] 
+data3 <- data[79847:79960,] 
+data3 <-data3[,c(1,4,35,36,37,38,39,40,41,42,43)]
+colnames(data3)
+library(lubridate)
+library(tibble)
+dates <- data3$date
+date_dis <- tibble(date = dates, 
+       month = month(dates),
+       day = day(dates),
+       year = year(dates))
+data3$date <- date_dis$month
+```
+
+Since we will visualize the number of people vaccinated in USA, here we kept the observations only on USA. The covid-19 vaccinations starts from Dec 20, 2020 so we considered the observations from Jan 1st, 2021 to April 24, 2021 in USA. 
+
+
+# people vaccinated
+```{r}
+library(ggplot2)
+library(reshape2)
+library(scales)
+
+ggplot(data3, aes(x = date, y = people_vaccinated, fill=as.factor(date))) +
+   xlab("Month") + ylab("People Vaccinated")+
+   geom_bar(stat="identity")+
+   ggtitle("People vaccinated \n by months in USA")+
+   scale_fill_discrete(name="Month",
+                         breaks=c("1", "2", "3", "4"),
+                         labels= c("Jan","Feb","Mar", "Apr"))+
+   scale_x_discrete(limit = c("1", "2", "3", "4"),
+                     labels = c("Jan","Feb","Mar", "Apr"))
+```
+
+From this graph we can see that number of people vaccinated is increasing gradually.
+This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand.  So, we can get an overall overview of what amount of people in each month received the 1 dose of vaccine. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out in which months the people get vaccinated more. Hence, we can easily compare between months to figure out the vaccination rate in USA.
+
+# people fully vaccinated
+```{r}
+ggplot(data3, aes(x = date, y = people_fully_vaccinated, fill=as.factor(date))) +
+   xlab("Month") + ylab("People fully Vaccinated")+
+   geom_bar(stat="identity")+
+   ggtitle("People fully vaccinated \n by months in USA")+
+   scale_fill_discrete(name="Month",
+                         breaks=c("1", "2", "3", "4"),
+                         labels= c("Jan","Feb","Mar", "Apr"))+
+   scale_x_discrete(limit = c("1", "2", "3", "4"),
+                     labels = c("Jan","Feb","Mar", "Apr"))
+
+'
+ggplot(data3, aes(x = as.Date(date), y = people_fully_vaccinated)) +
+  xlab("date") + ylab("People fully Vaccinated")+
+  geom_bar(stat="identity")+
+  scale_x_date(labels = date_format("%m-%d-%Y"))
+'
+```
+
+The number of people fully vaccinated also increasing gradually.
+This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand.  So, we can get an overall overview of what amount of people in each month getting fully vaccinated. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out in which months the amount of people getting fully vaccinated. Hence, we can easily compare between months to figure out the fully vaccination rate in USA.
+
+# Visualizing Amounts Improvement
+```{r}
+dfm <- melt(data3[,c('date','people_vaccinated','people_fully_vaccinated')],id.vars = 1)
+
+ggplot(dfm,aes(x = date,y = value)) + 
+  geom_bar(aes(fill = variable),stat = "identity")+
+  labs(x = "Month")+
+  labs(y = "Number of people vaccinated and fully vaccinated")+
+   ggtitle("People vaccinated vs fully vaccinated \n by months in USA")+
+   scale_x_discrete(limit = c("1", "2", "3", "4"),
+                     labels = c("Jan","Feb","Mar", "Apr"))
+
+```
+
+From this visualization we can very easily compare the number of people vaccinated vs number of people fully vaccinated each month.
+According to Cole Nussbaummer presentation on "Story Telling with Data", graphics play a vital role in data visualization. The graphics of this diagram is very clear since the color, font, shapes are used accurately. I think this diagram follow the 5 seconds rule since the color differentiation makes it easy to understand the story of the data within few seconds. This graph explains the real scenarios behind the covid-19 vaccination in USA. 
+
+# Visualizing Distributions
+
+```{r}
+data1 <- data[data$iso_code == "USA", ] 
+data2 <- data[data$iso_code == "GBR", ] 
+data3<-rbind(data1,data2)
+country <- ifelse(data3$iso_code == "USA",0,1)
+data4 <- cbind(country,data3)
+data4$country<-as.factor(data4$country)
+data4$country<-factor(data4$country,levels=c(0,1),labels=c("USA", "UK"))
+data5 <- data4[,-c(2)]
+dat2 <-data5[,c(1,6,8,11,18,20)]
+colnames(dat2)
+```
+
+
+#Data visualization distribution 
+```{r}
+ggplot(dat2, aes(x = country, y = hosp_patients, fill = country)) +
+  geom_boxplot(alpha=0.3) +
+    theme(legend.position="right")+
+  ggtitle("COVID-19 patients hospitalized in USA & UK")
+
+```
+
+From this visualization we can see the distributions of the hosp_patients in USA and UK.
+This graph follows the Tufte’s Principle 1: Maximizing the data-ink ratio, within reason because the non-redundant ink arranged in response to variation in the numbers represented. It's also follow  Principle 4: Escape flatland - small multiples, parallel sequencing because of the parallel plot of box-plots. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out in which countries the hosp_patients are too high. 
+
+The story behind this graph is comparing the distributions of hosp-patients in USA and UK and I think this graph tell the comparison between hosp_patients rate for both countries during this COVID-19 pandemic.  
+
+```{r}
+ggplot(dat2, aes(x = hosp_patients, fill = country)) +
+  geom_density()
+# Use semi-transparent fill
+p<-ggplot(dat2, aes(x=hosp_patients, fill = country)) +
+  geom_density(alpha=0.4)+
+  ggtitle("COVID-19 patients hospitalized in USA & UK")
+p
+
+```
+
+From this density plot, we can see the hosp_patients in USA and UK.
+
+This graph follows Tufte's  Principle 1: Maximizing the data-ink ratio, within reason and Principle 6: Utilize Layering & Separation. 
+
+# Data visualization proportion:
+
+
+```{r}
+data<-read.csv(file="owid-covid-data_new.csv",header=TRUE)
+dim(data)
+
+USA_20 <- data[74514:74514, ]
+UK_20 <- data[74081:74081, ]
+CAN_20 <- data[13100:13100, ]
+FRA_20 <- data[25899:25899, ]
+ITA_20 <- data[35349:35349, ]
+data_20<-rbind(USA_20,UK_20,CAN_20,FRA_20,ITA_20)
+data_f20 <- data_20[,c(1,4,8)]
+
+USA_21 <- data[74602:74602, ]
+UK_21 <- data[74169:74169, ]
+CAN_21 <- data[13188:13188, ]
+FRA_21 <- data[25987:25987, ]
+ITA_21 <- data[35437:35437, ]
+data_21<-rbind(USA_21,UK_21,CAN_21,FRA_21,ITA_21)
+data_f21 <- data_21[,c(1,4,8)]
+data_final <- rbind(data_f20,data_f21)
+
+```
+
+```{r}
+#library(tidyverse)
+#library(magrittr)
+#library(ggplot2)
+#library(reshape2)
+#library(scales)
+
+ggplot(data_final, aes(x = date, y = total_deaths, fill = iso_code)) +
+  xlab("Years") + ylab("Total deaths")+
+  geom_bar(stat="identity", position = 'dodge')+
+  geom_col()+
+  scale_x_discrete(name = "Years", labels=c("2020-12-31" = "2020", "2021-03-29" = "2021"))+
+  scale_y_continuous(name="Total deaths")+
+  ggtitle("Total deaths due to COVID-19")
+```
+From this data visualization, we can see the total deaths due to Covid-19 in Canada, France, Great Britain, Italy, and United States respectively.
+This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand.  So, we can compare what proportion of people died in each countries during this pandemic. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors. 
+## Data visualization proportion improvement:
+
+```{r}
+
+plot <- ggplot(data_final, aes(date, total_deaths, fill=iso_code))
+plot <- plot + geom_bar(stat = "identity", position = 'dodge')+
+  scale_x_discrete(name = "Years", labels=c("2020-12-31" = "2020", "2021-03-29" = "2021"))+
+  scale_y_continuous(name="Total deaths")+
+  ggtitle("Total deaths due to COVID-19")
+plot
+```
+From this data visualization, we can see the total deaths due to COVID-19 in Canada, France, Great Britain, Italy, and United States in 2020 and 2021 respectively. The number of total deaths very higher in USA compare to other countries.
+This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand.  So, we can compare what proportion of people died in each countries during this pandemic. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors. It's also follows Tufte's Principle 1: Maximizing the data-ink ratio, within reason. 
+
+The story behind this graph is comparing total deaths due to COVID-19 in the above mentioned countries. It's clearly visible that the total deaths in USA is very high both in 2020 and 2021 compare to other countries. I think this diagram follow the 5 seconds rule since the color differentiation makes it easy to understand the story of the data within few seconds. 
+
+```{r}
+data1 <- data[data$iso_code == "USA", ] 
+dat2 <-data1[,c(1,6,8,11,18,20)]
+colnames(dat2)
+data2 <- data[data$iso_code == "GBR", ] 
+data3<-rbind(data1,data2)
+country <- ifelse(data3$iso_code == "USA",0,1)
+data4 <- cbind(country,data3)
+data4$country<-as.factor(data4$country)
+data4$country<-factor(data4$country,levels=c(0,1),labels=c("USA", "UK"))
+data5 <- data4[,-c(2)]
+dat_2 <-data5[,c(1,6,8,9,11,18,20)]
+
+```
+
+```{r}
+miss.info<- function(dat, filename=NULL){  
+  
+  vnames <- colnames(dat); vnames 
+  
+  n <- nrow(dat)  
+  
+  out <- NULL  
+  
+  for (j in 1: ncol(dat)){  
+    
+    vname <- colnames(dat)[j]  
+    
+    x <- as.vector(dat[,j]) 
+    
+    n1 <- sum(is.na(x), na.rm=T)  
+    
+    n2 <- sum(x=="NA", na.rm=T)  
+    
+    n3 <- sum(x=="", na.rm=T)  
+    
+    nmiss <- n1 + n2 + n3  
+    
+    ncomplete <- n-nmiss 
+    
+    out <- rbind(out, c(col.number=j, vname=vname, mode=mode(x), n.levels=length(unique(x)), ncomplete=ncomplete, miss.perc=nmiss/n)) } 
+  
+  out <- as.data.frame(out)  
+  
+  row.names(out) <- NULL  
+  
+  return(out) 
+  
+}  
+
+miss.info(dat2)
+```
+
+```{r}
+library(mice)
+fit.mice.dat_f <- mice(dat2, m = 1, maxit = 50, method = 'pmm', seed = 500)
+dat_f.imputed <- complete(fit.mice.dat_f,1)
+datf <- as.data.frame(dat_f.imputed)
+```
+
+
+```{r}
+library("corrplot")
+dat3 <- datf[,-c(1)]
+M <- cor(dat3)
+corrplot(M, method="number")
+
+```
+
+From this correlation plot among the selected variables, we can see that total_deaths and total+cases_per_million, and icu_patients and hosp_patients in USA are very strongly correlated.
+This graph follows the Tufte"s Principle 1: Maximizing the data-ink ratio, within reason because it's has less redundant data-ink. This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand since we can easily figure out which variables are strongly correlated.
+
+# Data Association Imporvements:
+
+```{r}
+library(ggcorrplot)
+corr <- round(cor(dat3), 1)
+ggcorrplot(corr)
+```
+
+Here the red color is indicating the variables are very strongly correlated and blue color is indicating very weekly correlated. 
+This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out the associations between the variables. 
+```{r}
+ggcorrplot(corr, hc.order = TRUE, type = "lower",
+   lab = TRUE)
+
+```
+
+From this correlation plot, we can very easily visualize that total_deaths and total+cases_per_million, and icu_patients and hosp_patients in USA are very strongly correlated. Hence, when the hospitalized patients were high the icu_patients also high in USA during the covid-19 pandemic.
+This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand. and the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out the associations between the variables and I think this diagram follow the 5 seconds rule since the color differentiation with number makes it easy to understand the story of the data within few seconds.
+
+```{r}
+ggplot(dat_2, aes(x=new_cases, y=new_deaths, shape = country, color = country)) +
+  geom_point()+
+  ggtitle("new cases vs new deaths in USA and UK due to COVID-19") 
+ 
+```
+From this graph, we can visualize that when the new_cases is high the new_deaths also high both in USA and UK.
+This graph follows the Tufte's Principle 3: Maximize data density and the size of the data matrix, within reason and the Tufte’s Principle 6: Utilize Layering & Separation. The story behind this graph is understanding the relation between new_deaths and new_cases both in USA and UK and it's obvious that when the new_cases are high the new_deaths also high.
+
+# Visualizing Uncertainty
+
+```{r}
+data<-read.csv(file="owid-covid-data_new1.csv",header=TRUE)
+dim(data)
+data1 <- data[data$iso_code == "USA", ] 
+dim(data1)
+```
+
+
+```{r, warning=FALSE}
+#library(ggplot2)
+library(reshape2)
+library(scales)
+ggplot(data1, aes(x = as.Date(date), y =  new_deaths)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+```
+
+```{r, warning=FALSE}
+ggplot(data1, aes(x = as.Date(date), y =  new_deaths)) + 
+  geom_point()+
+  geom_smooth(method = loess, se=TRUE, color='blue')+
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "Date")+
+  labs(y = "new deaths")+
+  ggtitle("Plot of new deaths in USA \n due to COVID-19")
+  
+```
+This graph follows the Tufte's Principle 3: Maximize data density and the size of the data matrix, within reason and the Tufte’s Principle 6: Utilize Layering & Separation and the Tufte’s Principle 5: Provide the user with an overview and details on demand. From this visualization we can see the trends and uncertainty of new deaths in USA due to COVID-19. Here we used locally estimated scatter-plot smoothing (LOESS) instead of lm method. It's pretty clear that the new death rate is decreasing in USA last couple of days since the LOESS line is decreasing and the higher death rate happened at the beginning of 2021.
+So. it's clearly tell the stories of how the new-deaths rate is either increasing or decreasing during this COVID-19 pandemic.
+
+```{r}
+data<-read.csv(file="owid-covid-data417.csv",header=TRUE)
+dim(data)
+data1 <- data[data$iso_code == "USA", ] 
+data2 <- data[data$iso_code == "GBR", ] 
+data3<-rbind(data1,data2)
+country <- ifelse(data3$iso_code == "USA",0,1)
+data4 <- cbind(country,data3)
+data4$country<-as.factor(data4$country)
+data4$country<-factor(data4$country,levels=c(0,1),labels=c("USA", "UK"))
+data5 <- data4[,-c(2)]
+dat2 <-data5[,c(1,4,9)]
+colnames(dat2)
+
+```
+
+```{r, warning=FALSE}
+#library(ggplot2)
+library(gganimate)
+library(viridis)
+library(scales)
+theme_set(theme_bw())
+plot <- ggplot(dat2, aes(x = as.Date(date), y = new_deaths, color = country)) +
+  geom_line()+
+  geom_point(alpha = 0.3)+ 
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "date")+
+  labs(y = "Number of new_deaths")+
+  ggtitle("Plot of new deaths in USA & UK \n due to COVID-19")
+plot
+
+```
+This graph follows the Tufte's Principle 3: Maximize data density and the size of the data matrix, within reason and the Tufte’s Principle 6: Utilize Layering & Separation and the Tufte’s Principle 5: Provide the user with an overview and details on demand. From this visualization, we can compare the new_deaths in USA & UK due to COVID-19. In addition, we can figure out the number of new_deaths.So, the story behind this graph is telling the new_deaths rate both in USA and UK during this COVID-19 pandemic.
+
+
+# Data Visualization improvement:
+
+```{r, warning=FALSE}
+library(magick)
+plot <- ggplot(dat2, aes(x = as.Date(date), y = new_deaths, color = country)) +
+  geom_line()+
+  geom_point(alpha = 0.7)+
+  transition_reveal(as.Date(date))+ 
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "date")+
+  labs(y = "Number of new_deaths")+
+  ggtitle("Plot of new deaths in USA & UK \n due to COVID-19")
+animation <- animate(plot, nframes=100, renderer=magick_renderer())  
+animation
+#image_write_gif(animation, 'animation.gif')
+
+```
+This graph follows the Tufte’s Principle 6: Utilize Layering & Separation and the Tufte’s Principle 5: Provide the user with an overview and details on demand. The story behind this animated graph is letting us understand how the new deaths rate increasing and decreasing over the time both in USA and UK during this COVID-19 pandemic.
+
