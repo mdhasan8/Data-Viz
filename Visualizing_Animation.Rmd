@@ -1,0 +1,65 @@
+---
+title: "Comparing new_deaths in USA & UK"
+author: "Md Easin Hasan"
+date: "4/17/2021"
+output: word_document
+---
+```{r}
+data<-read.csv(file="owid-covid-data417.csv",header=TRUE)
+dim(data)
+data1 <- data[data$iso_code == "USA", ] 
+data2 <- data[data$iso_code == "GBR", ] 
+data3<-rbind(data1,data2)
+country <- ifelse(data3$iso_code == "USA",0,1)
+data4 <- cbind(country,data3)
+data4$country<-as.factor(data4$country)
+data4$country<-factor(data4$country,levels=c(0,1),labels=c("USA", "UK"))
+data5 <- data4[,-c(2)]
+dat2 <-data5[,c(1,4,9)]
+colnames(dat2)
+
+```
+We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. They have up-to-date data on confirmed cases, deaths, hospitalizations, testing, and vaccinations, throughout the duration of the COVID-19 pandemic.
+
+
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(gganimate)
+library(viridis)
+library(scales)
+theme_set(theme_bw())
+plot <- ggplot(dat2, aes(x = as.Date(date), y = new_deaths, color = country)) +
+  geom_line()+
+  geom_point(alpha = 0.3)+ 
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "date")+
+  labs(y = "Number of new_deaths")+
+  ggtitle("Plot of new deaths in USA & UK \n due to COVID-19")
+plot
+
+
+
+
+```
+
+From this visualization, we can compare the new_deaths in USA & UK due to COVID-19. In addition, we can figure out the number of new_deaths.
+
+
+# Data Visualization improvement:
+
+```{r, warning=FALSE}
+library(magick)
+plot <- ggplot(dat2, aes(x = as.Date(date), y = new_deaths, color = country)) +
+  geom_line()+
+  geom_point(alpha = 0.7)+
+  transition_reveal(as.Date(date))+ 
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "date")+
+  labs(y = "Number of new_deaths")+
+  ggtitle("Plot of new deaths in USA & UK \n due to COVID-19")
+animation <- animate(plot, nframes=100, renderer=magick_renderer())  
+animation
+image_write_gif(animation, 'animation.gif')
+
+```
