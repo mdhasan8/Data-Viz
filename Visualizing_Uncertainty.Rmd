@@ -1,0 +1,41 @@
+---
+title: "Visualizing Uncertainty"
+author: "Md Easin Hasan"
+date: "4/11/2021"
+output: word_document
+---
+
+```{r}
+data<-read.csv(file="owid-covid-data_new1.csv",header=TRUE)
+dim(data)
+colnames(data)
+data1 <- data[data$iso_code == "USA", ] 
+dim(data1)
+```
+
+We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. They have up-to-date data on confirmed cases, deaths, hospitalizations, testing, and vaccinations, throughout the duration of the COVID-19 pandemic. The dimension of this data-set is 80745 by 59.
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(reshape2)
+library(scales)
+ggplot(data1, aes(x = as.Date(date), y =  new_deaths)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+```
+
+# Visualizing Uncertainity Improvement:
+```{r, warning=FALSE}
+ggplot(data1, aes(x = as.Date(date), y =  new_deaths)) + 
+  geom_point()+
+  geom_smooth(method = loess, se=TRUE, color='blue')+
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "Date")+
+  labs(y = "new deaths")+
+  ggtitle("Plot of new deaths in USA \n due to COVID-19")
+  
+
+```
+
+From this visualization we can see the trends and uncertainty of new deaths in USA due to COVID-19. Here we used locally estimated scatter-plot smoothing (LOESS) instead of lm method. It's pretty clear that the new death rate is decreasing in USA last couple of days since the LOESS line is decreasing and the higher death rate happened at the beginning of 2021.
