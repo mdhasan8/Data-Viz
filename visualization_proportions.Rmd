@@ -1,0 +1,59 @@
+---
+title: "Data visualization proportion"
+author: "Md Easin Hasan"
+date: "3/28/2021"
+output: word_document
+---
+
+```{r}
+data<-read.csv(file="owid-covid-data_new.csv",header=TRUE)
+dim(data)
+
+USA_20 <- data[74514:74514, ]
+UK_20 <- data[74081:74081, ]
+CAN_20 <- data[13100:13100, ]
+FRA_20 <- data[25899:25899, ]
+ITA_20 <- data[35349:35349, ]
+data_20<-rbind(USA_20,UK_20,CAN_20,FRA_20,ITA_20)
+data_f20 <- data_20[,c(1,4,8)]
+
+USA_21 <- data[74602:74602, ]
+UK_21 <- data[74169:74169, ]
+CAN_21 <- data[13188:13188, ]
+FRA_21 <- data[25987:25987, ]
+ITA_21 <- data[35437:35437, ]
+data_21<-rbind(USA_21,UK_21,CAN_21,FRA_21,ITA_21)
+data_f21 <- data_21[,c(1,4,8)]
+data_final <- rbind(data_f20,data_f21)
+
+```
+
+```{r}
+#library(tidyverse)
+#library(magrittr)
+library(ggplot2)
+#library(reshape2)
+#library(scales)
+
+ggplot(data_final, aes(x = date, y = total_deaths, fill = iso_code)) +
+  xlab("Years") + ylab("Total deaths")+
+  geom_bar(stat="identity", position = 'dodge')+
+  geom_col()+
+  scale_x_discrete(name = "Countries", labels=c("2020-12-31" = "2020", "2021-03-29" = "2021"))+
+  scale_y_continuous(name="Total deaths")
+```
+
+From this data visualization, we can see the total deaths due to Covid-19 in Canada, France, Great Britain, Italy, and United States respectively.
+
+## Data visualization proportion improvement:
+
+```{r}
+
+plot <- ggplot(data_final, aes(date, total_deaths, fill=iso_code))
+plot <- plot + geom_bar(stat = "identity", position = 'dodge')+
+  scale_x_discrete(name = "Years", labels=c("2020-12-31" = "2020", "2021-03-29" = "2021"))+
+  scale_y_continuous(name="Total deaths")
+plot
+```
+
+From this data visualization, we can see the total deaths due to Covid-19 in Canada, France, Great Britain, Italy, and United States in 2020 and 2021 respectively. The number of total deaths very higher in USA compare to other countries.   
