@@ -1,0 +1,94 @@
+---
+title: "Data Visualization Distributions"
+author: "Md Easin Hasan"
+date: "3/27/2021"
+output: word_document
+---
+
+```{r}
+
+data<-read.csv(file="owid-covid-data.csv",header=TRUE)
+dim(data)
+#colnames(data)
+data1 <- data[data$iso_code == "USA", ] 
+data2 <- data[data$iso_code == "GBR", ] 
+data3<-rbind(data1,data2)
+#dim(data1)
+#dim(data2)
+country <- ifelse(data3$iso_code == "USA",0,1)
+data4 <- cbind(country,data3)
+data4$country<-as.factor(data4$country)
+data4$country<-factor(data4$country,levels=c(0,1),labels=c("USA", "UK"))
+data5 <- data4[,-c(2)]
+dat2 <-data5[,c(1,6,8,11,18,20)]
+colnames(dat2)
+```
+```{r}
+miss.info<- function(dat, filename=NULL){  
+  
+  vnames <- colnames(dat); vnames 
+  
+  n <- nrow(dat)  
+  
+  out <- NULL  
+  
+  for (j in 1: ncol(dat)){  
+    
+    vname <- colnames(dat)[j]  
+    
+    x <- as.vector(dat[,j]) 
+    
+    n1 <- sum(is.na(x), na.rm=T)  
+    
+    n2 <- sum(x=="NA", na.rm=T)  
+    
+    n3 <- sum(x=="", na.rm=T)  
+    
+    nmiss <- n1 + n2 + n3  
+    
+    ncomplete <- n-nmiss 
+    
+    out <- rbind(out, c(col.number=j, vname=vname, mode=mode(x), n.levels=length(unique(x)), ncomplete=ncomplete, miss.perc=nmiss/n)) } 
+  
+  out <- as.data.frame(out)  
+  
+  row.names(out) <- NULL  
+  
+  return(out) 
+  
+}  
+
+miss.info(dat2) 
+```
+```{r}
+library(mice)
+fit.mice.dat_f <- mice(dat2, m = 1, maxit = 50, method = 'pmm', seed = 500)
+dat_f.imputed <- complete(fit.mice.dat_f,1)
+datf <- as.data.frame(dat_f.imputed)
+```
+
+## Data visualization proportion improvement
+
+
+## Data visualization proportion improvement
+
+
+
+```{r, warning=FALSE}
+dat3 <- dat2[,-c(2,3,4,5)]
+
+boxplot(dat3, main = "Covid-19 patients hospitalized in USA and UK",col="orange", border="brown",
+        notch = TRUE)
+```
+
+
+## Data visualization distribution improvement
+
+```{r, warning=FALSE}
+library(ggplot2)
+ggplot(dat2, aes(x = country, y = hosp_patients, fill = country)) +
+  geom_boxplot(alpha=0.3) +
+    theme(legend.position="right")+
+  ggtitle("COVID-19 patients hospitalized in USA & UK")
+
+```
