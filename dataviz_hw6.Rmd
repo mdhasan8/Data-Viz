@@ -1,0 +1,102 @@
+---
+title: "Visualizing Amounts Improvement"
+author: "Md Easin Hasan"
+date: "3/9/2021"
+output: word_document
+---
+
+# Import the dataset:
+```{r}
+data<-read.csv(file="owid-covid-data.csv",header=TRUE)
+dim(data)
+```
+
+We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. They have up-to-date data on confirmed cases, deaths, hospitalizations, testing, and vaccinations, throughout the duration of the COVID-19 pandemic.
+
+```{r}
+data1 <- data[data$iso_code == "USA", ] 
+data3 <- data[69885:69962,]
+data3 <-data3[,c(1,4,35,36,37,38,39,40,41,42,43)]
+colnames(data3)
+```
+
+Since we will visualize the number of people vaccinated in USA, here we kept the observations only on USA. The covid-19 vaccinations starts from Dec 20, 2020 so we considered the observations from Dec 20, 2020 to Mar 07, 2021 in USA. 
+
+```{r}
+miss.info<- function(dat, filename=NULL){  
+  
+  vnames <- colnames(dat); vnames 
+  
+  n <- nrow(dat)  
+  
+  out <- NULL  
+  
+  for (j in 1: ncol(dat)){  
+    
+    vname <- colnames(dat)[j]  
+    
+    x <- as.vector(dat[,j]) 
+    
+    n1 <- sum(is.na(x), na.rm=T)  
+    
+    n2 <- sum(x=="NA", na.rm=T)  
+    
+    n3 <- sum(x=="", na.rm=T)  
+    
+    nmiss <- n1 + n2 + n3  
+    
+    ncomplete <- n-nmiss 
+    
+    out <- rbind(out, c(col.number=j, vname=vname, mode=mode(x), n.levels=length(unique(x)), ncomplete=ncomplete, miss.perc=nmiss/n)) } 
+  
+  out <- as.data.frame(out)  
+  
+  row.names(out) <- NULL  
+  
+  return(out) 
+  
+}  
+
+miss.info(data3) 
+
+```
+
+Here we checked the missing value in the selected observations. Since we would like to see in which date there is no vaccination reported, we didn't remove the missing values.
+
+# people vaccinated
+```{r}
+library(ggplot2)
+library(reshape2)
+library(scales)
+
+ggplot(data3, aes(x = as.Date(date), y = people_vaccinated)) +
+    xlab("date") + ylab("People Vaccinated")+
+    geom_bar(stat="identity")+
+    scale_x_date(labels = date_format("%m-%d-%Y"))
+```
+
+From this graph we can see that number of people vaccinated is increasing gradually.
+
+# people fully vaccinated
+```{r}
+
+ggplot(data3, aes(x = as.Date(date), y = people_fully_vaccinated)) +
+  xlab("date") + ylab("People fully Vaccinated")+
+  geom_bar(stat="identity")+
+  scale_x_date(labels = date_format("%m-%d-%Y"))
+```
+
+The number of people fully vaccinated also increasing gradually.
+
+# Visualizing Amounts Improvement
+```{r}
+dfm <- melt(data3[,c('date','people_vaccinated','people_fully_vaccinated')],id.vars = 1)
+
+ggplot(dfm,aes(x = as.Date(date),y = value)) + 
+  geom_bar(aes(fill = variable),stat = "identity") + 
+  scale_x_date(labels = date_format("%m-%d-%Y"))+
+  labs(x = "date")+
+  labs(y = "Number of people vaccinated vs fully vaccinated")
+```
+
+From this visualization we can very easily compare the number of people vaccinated vs number of people fully vaccinated each day. 
