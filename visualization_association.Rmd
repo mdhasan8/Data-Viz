@@ -1,0 +1,87 @@
+---
+title: "Data Visualization Association"
+author: "Md Easin Hasan"
+date: "4/4/2021"
+output: word_document
+---
+
+```{r}
+setwd("E:/Data Visualization")
+data<-read.csv(file="owid-covid-data_new.csv",header=TRUE)
+dim(data)
+data1 <- data[data$iso_code == "USA", ] 
+dat2 <-data1[,c(1,6,8,11,18,20)]
+colnames(dat2)
+
+```
+```{r}
+miss.info<- function(dat, filename=NULL){  
+  
+  vnames <- colnames(dat); vnames 
+  
+  n <- nrow(dat)  
+  
+  out <- NULL  
+  
+  for (j in 1: ncol(dat)){  
+    
+    vname <- colnames(dat)[j]  
+    
+    x <- as.vector(dat[,j]) 
+    
+    n1 <- sum(is.na(x), na.rm=T)  
+    
+    n2 <- sum(x=="NA", na.rm=T)  
+    
+    n3 <- sum(x=="", na.rm=T)  
+    
+    nmiss <- n1 + n2 + n3  
+    
+    ncomplete <- n-nmiss 
+    
+    out <- rbind(out, c(col.number=j, vname=vname, mode=mode(x), n.levels=length(unique(x)), ncomplete=ncomplete, miss.perc=nmiss/n)) } 
+  
+  out <- as.data.frame(out)  
+  
+  row.names(out) <- NULL  
+  
+  return(out) 
+  
+}  
+
+miss.info(dat2) 
+```
+
+```{r}
+library(mice)
+fit.mice.dat_f <- mice(dat2, m = 1, maxit = 50, method = 'pmm', seed = 500)
+dat_f.imputed <- complete(fit.mice.dat_f,1)
+datf <- as.data.frame(dat_f.imputed)
+```
+
+```{r}
+library("corrplot")
+dat3 <- datf[,-c(1)]
+M <- cor(dat3)
+corrplot(M, method="number")
+
+```
+
+From this correlation plot among the selected variables, we can see that total_deaths and total+cases_per_million, and icu_patients and hosp_patients in USA are very strongly correlated.
+
+# Data Association Imporvements:
+
+```{r}
+library(ggcorrplot)
+#dat4 <- data.frame(dat3)
+corr <- round(cor(dat3), 1)
+ggcorrplot(corr)
+```
+Here the red color is indicating the variables are very strongly correlated and blue color is indicating very weekly correlated. 
+
+```{r}
+ggcorrplot(corr, hc.order = TRUE, type = "lower",
+   lab = TRUE)
+
+```
+From this correlation plot, we can very easily visualize that total_deaths and total+cases_per_million, and icu_patients and hosp_patients in USA are very strongly correlated. Hence, when the hospitalized patients were high the icu_patients also high in USA during the covid-19 pandemic.
