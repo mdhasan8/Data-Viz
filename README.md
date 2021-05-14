@@ -5,7 +5,8 @@ We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. Th
 
 ## People vaccinated:
 
-![image](https://user-images.githubusercontent.com/52440384/116831138-ced6d180-ab6a-11eb-830d-e11b381f0659.png)
+![image](https://user-images.githubusercontent.com/52440384/118288502-bf705600-b491-11eb-8fa0-7e57c34ed9c1.png)
+
 
 ## People fully vaccinated:
 
