@@ -12,7 +12,7 @@ We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. Th
 
 ![image](https://user-images.githubusercontent.com/52440384/116831350-f4180f80-ab6b-11eb-96ff-35f7988ea62a.png)
 
-## Comparison between amount of people vaccinated vs fully vaccinated:
+## People vaccinated vs fully vaccinated:
 
 ![image](https://user-images.githubusercontent.com/52440384/116831369-1c077300-ab6c-11eb-9e15-22b3b836c4cd.png)
 
@@ -28,7 +28,7 @@ From this visualization we can see the distributions of the hosp_patients in USA
 
 The story behind this graph is comparing the distributions of hosp-patients in USA and UK and I think this graph tell the comparison between hosp_patients rate for both countries during this COVID-19 pandemic.
 
-## Data visualization proportions:
+## Visualizing Proportions:
 
 ![image](https://user-images.githubusercontent.com/52440384/116831443-ad76e500-ab6c-11eb-87ad-9e7ec593ace3.png)
 
@@ -36,7 +36,7 @@ From this data visualization, we can see the total deaths due to COVID-19 in Can
 The story behind this graph is comparing total deaths due to COVID-19 in the above mentioned countries. It’s clearly visible that the total deaths in USA is very high both in 2020 and 2021 compare to other countries. I think this diagram follow the 5 seconds rule since the color differentiation makes it easy to understand the story of the data within few seconds.
 
 
-## Data visualization association:
+## Visualizing Associations:
 
 ![image](https://user-images.githubusercontent.com/52440384/116831471-dac39300-ab6c-11eb-8ca6-e12b5fdda4ed.png)
 
@@ -53,9 +53,11 @@ From this graph, we can visualize that when the new_cases is high the new_deaths
 
 This graph follows the Tufte’s Principle 3: Maximize data density and the size of the data matrix, within reason and the Tufte’s Principle 6: Utilize Layering & Separation and the Tufte’s Principle 5: Provide the user with an overview and details on demand. From this visualization we can see the trends and uncertainty of new deaths in USA due to COVID-19. Here we used locally estimated scatter-plot smoothing (LOESS) instead of lm method. It’s pretty clear that the new death rate is decreasing in USA last couple of days since the LOESS line is decreasing and the higher death rate happened at the beginning of 2021. So. it’s clearly tell the stories of how the new-deaths rate is either increasing or decreasing during this COVID-19 pandemic.
 
+## Storytelling:
 ![image](https://user-images.githubusercontent.com/52440384/116831646-d9469a80-ab6d-11eb-8ba7-d85ec6c558d5.png)
 
 This graph follows the Tufte’s Principle 3: Maximize data density and the size of the data matrix, within reason and the Tufte’s Principle 6: Utilize Layering & Separation and the Tufte’s Principle 5: Provide the user with an overview and details on demand. From this visualization, we can compare the new_deaths in USA & UK due to COVID-19. In addition, we can figure out the number of new_deaths.So, the story behind this graph is telling the new_deaths rate both in USA and UK during this COVID-19 pandemic.
 
 
 
+![](animation.gif)
