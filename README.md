@@ -60,4 +60,5 @@ This graph follows the Tufte’s Principle 3: Maximize data density and the size
 
 
 
-![](animation.gif)
+![animation](https://github.com/mdhasan8/Data-Viz/blob/main/animation.gif)
+
