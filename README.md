@@ -18,17 +18,17 @@ We have obtained the data-set on COVID-19 (coronavirus) by Our World in Data. Th
 
 From this visualization we can very easily compare the number of people vaccinated vs number of people fully vaccinated each month. According to Cole Nussbaummer presentation on “Story Telling with Data”, graphics play a vital role in data visualization. The graphics of this diagram is very clear since the color, font, shapes are used accurately. I think this diagram follow the 5 seconds rule since the color differentiation makes it easy to understand the story of the data within few seconds. This graph explains the real scenarios behind the covid-19 vaccination program.
 
-## Visualizing Distributions
+## Visualizing Distributions:
 
 ![image](https://user-images.githubusercontent.com/52440384/116831399-5bce5a80-ab6c-11eb-8067-44b74b36e43a.png)
 
+From this visualization we can see the distributions of the hosp_patients in USA and UK. This graph follows the Tufte’s Principle 1: Maximizing the data-ink ratio, within reason because the non-redundant ink arranged in response to variation in the numbers represented. It’s also follow Principle 4: Escape flatland - small multiples, parallel sequencing because of the parallel plot of box-plots. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out in which countries the hosp_patients are too high.
+
 ![image](https://user-images.githubusercontent.com/52440384/116831429-90421680-ab6c-11eb-96a6-b4893ce71b03.png)
 
-
-From this visualization we can see the distributions of the hosp_patients in USA and UK. This graph follows the Tufte’s Principle 1: Maximizing the data-ink ratio, within reason because the non-redundant ink arranged in response to variation in the numbers represented. It’s also follow Principle 4: Escape flatland - small multiples, parallel sequencing because of the parallel plot of box-plots. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out in which countries the hosp_patients are too high.
 The story behind this graph is comparing the distributions of hosp-patients in USA and UK and I think this graph tell the comparison between hosp_patients rate for both countries during this COVID-19 pandemic.
 
-## Data visualization proportion:
+## Data visualization proportions:
 
 ![image](https://user-images.githubusercontent.com/52440384/116831443-ad76e500-ab6c-11eb-87ad-9e7ec593ace3.png)
 
