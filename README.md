@@ -38,7 +38,8 @@ The story behind this graph is comparing total deaths due to COVID-19 in the abo
 
 ## Visualizing Associations:
 
-![image](https://user-images.githubusercontent.com/52440384/116831471-dac39300-ab6c-11eb-8ca6-e12b5fdda4ed.png)
+![image](https://user-images.githubusercontent.com/52440384/118325041-19881000-b4c0-11eb-8829-0720583547b3.png)
+
 
 From this correlation plot, we can very easily visualize that total_deaths and total+cases_per_million, and icu_patients and hosp_patients in USA are very strongly correlated. Hence, when the hospitalized patients were high the icu_patients also high in USA during the covid-19 pandemic. This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand. and the Tufte’s Principle 6: Utilize Layering & Separation since using different colors we can figure out the associations between the variables and I think this diagram follow the 5 seconds rule since the color differentiation with number makes it easy to understand the story of the data within few seconds.
 
