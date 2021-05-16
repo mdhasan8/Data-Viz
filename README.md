@@ -35,6 +35,14 @@ The story behind this graph is comparing the distributions of hosp-patients in U
 From this data visualization, we can see the total deaths due to COVID-19 in Canada, France, Great Britain, Italy, and United States in 2020 and 2021 respectively. The number of total deaths very higher in USA compare to other countries. This graph follows the Tufte’s Principle 5: Provide the user with an overview and details on demand. So, we can compare what proportion of people died in each countries during this pandemic. This graph follows the Tufte’s Principle 6: Utilize Layering & Separation since using different colors. It’s also follows Tufte’s Principle 1: Maximizing the data-ink ratio, within reason.
 The story behind this graph is comparing total deaths due to COVID-19 in the above mentioned countries. It’s clearly visible that the total deaths in USA is very high both in 2020 and 2021 compare to other countries. I think this diagram follow the 5 seconds rule since the color differentiation makes it easy to understand the story of the data within few seconds.
 
+## Visualizing Proportions by years:
+
+![image](https://user-images.githubusercontent.com/52440384/118382541-de670900-b5b3-11eb-8abb-f5cd0e966c87.png)
+
+From this data visualization, we can see the total deaths proportions due to COVID-19 in Canada, France, Great Britain, Italy, and United States in 2020 and 2021 respectively. The number of total deaths are higher in 2021 compare to 2020 in each countries.
+
+
+
 
 ## Visualizing Associations:
 
