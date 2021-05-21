@@ -71,5 +71,4 @@ This graph follows the Tufte’s Principle 3: Maximize data density and the size
 This graph follows the Tufte’s Principle 3: Maximize data density and the size of the data matrix, within reason and the Tufte’s Principle 6: Utilize Layering & Separation and the Tufte’s Principle 5: Provide the user with an overview and details on demand. From this visualization, we can compare the new_deaths in USA & UK due to COVID-19. In addition, we can figure out the number of new_deaths.So, the story behind this graph is telling the new_deaths rate both in USA and UK during this COVID-19 pandemic.
 
 
-![zoom_0](https://github.com/mdhasan8/Data-Viz/blob/main/zoom_0.mp4)
 
